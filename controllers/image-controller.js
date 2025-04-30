@@ -30,6 +30,32 @@ const uploadImageController = async (req, res) => {
     }
 }
 
+const getImageController = async (req, res) => {
+    try {
+        
+        const imageId = req.params.id;
+
+        if (!imageId) {
+            res.status(400).json({
+                message: "Invalid image id"
+            })
+        }
+
+        const data = await Image.findById(imageId).populate('uploadedBy', ['id', 'role']);
+
+        res.status(200).json({
+            message: "Successful",
+            data: data
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Error fetching this image"
+        })
+    }
+}
+
 const getAllImagesController = async (req, res) => {
     try {
         const allImages = await Image.find();
@@ -86,4 +112,4 @@ const deleteImageController = async(req, res) => {
     }
 }
 
-module.exports = {uploadImageController, getAllImagesController, deleteImageController};
+module.exports = {uploadImageController, getAllImagesController, deleteImageController, getImageController};
